@@ -1,6 +1,9 @@
 # https://quera.org/problemset/9722
 
 
+import math
+
+
 def is_prime(n):
     if n <= 1:
         return False
@@ -11,7 +14,7 @@ def is_prime(n):
     if n % 2 == 0:
         return False
 
-    for i in range(3, n//2+1):
+    for i in range(3, math.floor(math.sqrt(n))+1, 2):
         if n % i == 0:
             return False
 
