@@ -1,12 +1,12 @@
 # https://quera.org/problemset/2659
 
 n = int(input())
-base = input()
-user = input()
-letters = []
+p1 = input()
+p2 = input()
 
-for idx, letter in enumerate(user):
-    if base[idx] != letter:
-        letters.append(letter)
-
-print(len(letters))
+print(
+    sum(
+        1 if p1[i] != p2[i] else 0
+        for i in range(n)
+    )
+)
