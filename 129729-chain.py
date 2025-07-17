@@ -1,53 +1,47 @@
 # https://quera.org/problemset/129729
 
+
 class Chain:
-    TYPES = [int, str]
+    TYPES = (float, str)
 
     def __init__(self, value):
-        self.value = value
-        self._type = Chain.get_type(self.value)
+        if isinstance(value, int):
+            value = float(value)
 
-    def __call__(self, value):
-        _type = Chain.get_type(value)
-
-        if (_type != self._type) or (_type not in Chain.TYPES):
+        if not isinstance(value, self.TYPES):
             raise Exception('invalid operation')
 
-        elif _type == str:
-            self.value += f' {value}'
+        self.value = value
 
-        elif _type == int:
-            self.value += value
-            if self.value == int(self.value):
-                self.value = int(self.value)
+    @property
+    def datatype(self):
+        return type(self.value)
 
-        return self
+    def __call__(self, value):
+        other = type(self)(value)
+        return self + other
+
+    def __add__(self, other):
+        cls = type(self)
+        if not isinstance(other, cls):
+            other = cls(other)
+
+        if self.datatype != other.datatype:
+            raise Exception('invalid operation')
+
+        if self.datatype == str:
+            return cls(self.value + ' ' + other.value)
+        elif self.datatype == float:
+            return cls(self.value + other.value)
 
     def __eq__(self, value):
-        if isinstance(value, Chain):
-            return self.value == value.value
+        if isinstance(value, type(self)):
+            value = value.value
         return self.value == value
 
-    @staticmethod
-    def get_type(value):
-        if Chain.is_number(value):
-            return int
-        elif Chain.is_string(value):
-            return str
-
-    @staticmethod
-    def is_number(value):
-        if isinstance(value, int) or isinstance(value, float):
-            return True
-        return False
-
-    @staticmethod
-    def is_string(value):
-        if isinstance(value, str):
-            return True
-        return False
-
     def __repr__(self):
-        if self._type == str:
+        if self.datatype == str:
             return f"'{self.value}'"
+        elif (self.datatype == float) and self.value.is_integer():
+            return str(int(self.value))
         return str(self.value)
