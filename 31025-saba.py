@@ -3,8 +3,5 @@
 import math
 
 n, k = list(map(int, input().split()))
-
-for i in range(k):
-    n /= 2
-
+n /= (2 ** k)
 print(math.floor(n))
