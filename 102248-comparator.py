@@ -8,11 +8,10 @@ def compare(s1, s2):
             s1 = s1[1:]
         if o2 <= o1:
             s2 = s2[1:]
+
         if s2:
             s1 = s1[::-1]
         if s1:
             s2 = s2[::-1]
 
-    if s1 == s2 == '':
-        return 'Both strings are empty!'
-    return s1 or s2
+    return s1 or s2 or 'Both strings are empty!'
