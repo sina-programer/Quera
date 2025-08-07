@@ -1,6 +1,15 @@
 # https://quera.org/problemset/3539
 
-x = input()
-while len(x) > 1:
-    x = str(sum(map(int, x)))
+x = int(input())
+
+while x > 9:
+    s = 0
+
+    while x > 0:
+        d, m = divmod(x, 10)
+        s += m
+        x = d
+
+    x = s
+
 print(x)
