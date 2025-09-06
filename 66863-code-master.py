@@ -1,8 +1,6 @@
 # https://quera.org/problemset/66863
 
-import string
-
-DIGITS = string.digits + string.ascii_uppercase
+import math
 
 
 def is_prime(x):
@@ -29,24 +27,20 @@ def get_primes():
         x += 2
 
 
-def to_base(x: int, base: int) -> str:
-    digits = []
-    while x:
-        d, m = divmod(x, base)
-        digits.insert(0, DIGITS[m])
-        x = d
-
-    return ''.join(digits)
+def length(x, b=10):
+    return math.floor(math.log(x, b)) + 1
 
 
-def is_symmetric(clause: str):
-    n = len(clause)
-    for i in range(n//2+1):
+def is_vip(x, base):
+    ''' checks the symmetry of <x> in <base> radix at the same time '''
+    n = length(x, base)
+    for i in range(n//2):
         j = n - i - 1
-        if clause[i] != clause[j]:
+        a = x % (base ** (i+1)) // (base ** i)
+        b = x % (base ** (j+1)) // (base ** j)
+        if a != b:
             return False
     return True
-
 
 
 n, k = map(int, input().split())
@@ -54,8 +48,11 @@ primes = get_primes()
 
 while True:
     prime = next(primes)
+    d, m = divmod(length(prime, k), 2)
+    if m == 0 and d > 1:
+        continue
 
-    if is_symmetric(to_base(prime, k)):
+    if is_vip(prime, k):
         n -= 1
         if n == 0:
             print(prime)
