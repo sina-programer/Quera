@@ -1,6 +1,10 @@
 # https://quera.org/problemset/66863
 
+import itertools as it
+import string
 import math
+
+DIGITS = string.digits + string.ascii_uppercase
 
 
 def is_prime(x):
@@ -16,44 +20,33 @@ def is_prime(x):
     return True
 
 
-def get_primes():
-    yield 2
-
-    x = 3
-    while True:
-        if is_prime(x):
-            yield x
-
-        x += 2
-
-
 def length(x, b=10):
     return math.floor(math.log(x, b)) + 1
 
 
-def is_vip(x, base):
-    ''' checks the symmetry of <x> in <base> radix at the same time '''
-    n = length(x, base)
-    for i in range(n//2):
-        j = n - i - 1
-        a = x % (base ** (i+1)) // (base ** i)
-        b = x % (base ** (j+1)) // (base ** j)
-        if a != b:
-            return False
-    return True
+def get_symmetrical_numbers(base=10):
+    digits = DIGITS[:base]
+    n = 1
+
+    while True:
+        d, m = divmod(n+1, 2)
+        for comb in it.product(*([digits] * d)):
+            if comb[0] == '0':
+                continue
+            yield int(''.join(comb + comb[:d+m-1][::-1]), base=base)
+
+        n += 1
 
 
 n, k = map(int, input().split())
-primes = get_primes()
 
-while True:
-    prime = next(primes)
-    d, m = divmod(length(prime, k), 2)
+for x in get_symmetrical_numbers(base=k):
+    d, m = divmod(length(x, k), 2)
     if m == 0 and d > 1:
         continue
 
-    if is_vip(prime, k):
+    if is_prime(x):
         n -= 1
         if n == 0:
-            print(prime)
+            print(x)
             break
